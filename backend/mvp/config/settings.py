@@ -42,10 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # api docs
-    'drf-yasg',
+    'drf_yasg',
 
     # third party
-    'rest-framework',
+    'rest_framework',
 
     # my app
     'api',
