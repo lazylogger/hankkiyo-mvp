@@ -29,7 +29,9 @@ SECRET_KEY = secrets['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'ec2-3-34-210-157.ap-northeast-2.compute.amazonaws.com',
+]
 
 
 # Application definition
