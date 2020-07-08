@@ -46,7 +46,8 @@ class Menu(models.Model):
     name = models.CharField('메뉴명', max_length=40, null=False)  # 한글표기
     abbr = models.CharField('menu', max_length=40, null=False, default="")  # 영문표기
     description = models.TextField('메뉴설명', max_length=300, null=False)
-    imgSrc = models.ImageField('메뉴이미지', upload_to='menus/%Y/%m/%d', blank=True)
+    # imgSrc = models.ImageField('메뉴이미지', upload_to='menus/%Y/%m/%d', blank=True)
+    imgSrc = models.CharField('메뉴이미지', max_length=300, default="")
     price = models.IntegerField('가격', default=0)
 
     available_display = models.BooleanField('제품노출여부', default=True)  # 주문 불가능 제품이라도 목록에 노출하는 경우 있음음
