@@ -49,6 +49,8 @@ INSTALLED_APPS = [
 
     # third party
     'rest_framework',
+    'storages',
+    'pipeline',
 
     # my app
     'api',
@@ -131,7 +133,72 @@ USE_L10N = True
 USE_TZ = True
 
 
+# PIPELINE
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'JAVASCRIPT': {
+        'stats': {
+            'source_filenames': (
+              'js/jquery.js',
+              'js/d3.js',
+              'js/collections/*.js',
+              'js/application.js',
+            ),
+            'output_filename': 'js/stats.js',
+        }
+    }
+}
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+"""
+if DEBUG:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'   # Local, 즉 DEBUG=True 일 경우 pipeline 사용
 
+    MEDIA_URL = '/media/'   # config/media/모델명/사진.jpg
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+else:
+    # AWS S3 AWS Setting
+    AWS_ACCESS_KEY_ID = secrets['AWS_S3']['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = secrets['AWS_S3']['AWS_SECRET_ACCESS_KEY']
+    AWS_REGION = secrets['AWS_S3']['AWS_REGION']
+
+    AWS_STORAGE_BUCKET_NAME = secrets['AWS_S3']['AWS_STORAGE_BUCKET_NAME']
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_DEFAULT_ACL = None
+
+    # Static Setting
+    STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # Media Setting
+    MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
+"""
+
+# AWS S3 AWS Setting
+AWS_ACCESS_KEY_ID = secrets['AWS_S3']['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = secrets['AWS_S3']['AWS_SECRET_ACCESS_KEY']
+AWS_REGION = secrets['AWS_S3']['AWS_REGION']
+
+AWS_STORAGE_BUCKET_NAME = secrets['AWS_S3']['AWS_STORAGE_BUCKET_NAME']
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = None
+
+# Static Setting
 STATIC_URL = '/static/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media Setting
+# MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
