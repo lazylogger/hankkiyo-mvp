@@ -2,8 +2,8 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField('카테고리', max_length=40, null=False)  # 한글표기
-    abbr = models.CharField('category', max_length=40, null=False, blank=True, default="")  # 영문표기
+    name = models.CharField('카테고리', max_length=40, null=False, unique=True)  # 한글표기
+    abbr = models.CharField('category', max_length=40, null=False, unique=True)  # 영문표기
     imgSrc = models.FileField('카테고리사진', upload_to='category', null=False, blank=True)
 
     # imgSrc = models.CharField('카테고리사진', max_length=300, default="")
@@ -18,8 +18,8 @@ class Category(models.Model):
 
 
 class Store(models.Model):
-    name = models.CharField('업체명', max_length=40, null=False)  # 한글표기
-    abbr = models.CharField('store', max_length=40, null=False, default="")  # 영문표기
+    name = models.CharField('업체명', max_length=40, null=False, unique=True)  # 한글표기
+    abbr = models.CharField('store', max_length=40, null=False, unique=True)  # 영문표기
     imgSrc = models.FileField('업체사진', upload_to='store', null=False, blank=True)
     # imgSrc = models.CharField('업체사진', max_length=300, default="")
 
@@ -47,10 +47,10 @@ class Store(models.Model):
 
 class Menu(models.Model):
     name = models.CharField('메뉴명', max_length=40, null=False, unique=True)  # 한글표기
-    abbr = models.CharField('menu', max_length=40, null=False, default="")  # 영문표기
+    abbr = models.CharField('menu', max_length=40, null=False, unique=True)  # 영문표기
     imgSrc = models.FileField('메뉴사진', upload_to='menu', null=False, blank=True)
     # imgSrc = models.CharField('메뉴사진', max_length=300, default="")
-    price = models.IntegerField('가격', default=0)
+    price = models.IntegerField('가격', default=0, null=False)
 
     '''추후 적용'''
     # description = models.TextField('메뉴설명', max_length=300, null=False)
