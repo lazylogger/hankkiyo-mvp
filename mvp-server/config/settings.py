@@ -59,7 +59,7 @@ INSTALLED_APPS = [
 # rest framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     )
 }
 
@@ -130,7 +130,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True   # 장고 내부적으로 인식하는 시간대
+USE_TZ = False   # local time 사용
 
 
 # PIPELINE

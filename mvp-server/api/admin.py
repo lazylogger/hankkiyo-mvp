@@ -15,3 +15,8 @@ class StoreAdmin(admin.ModelAdmin):
 @admin.register(models.Menu)
 class MenuAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    pass

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Store, Menu
+from .models import Category, Store, Menu, Order
 
 
 class CategoryListSerializer(serializers.HyperlinkedModelSerializer):
@@ -50,3 +50,21 @@ class StoreDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
         fields = ['name', 'abbr', 'category', 'imgSrc', 'menus']
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    """
+    StringRelatedField 역할 ( menu : 1 -> menu : "1인 후라이드 치킨" )
+    POST 목적의 serializer 에는 적합하지 않음.
+    menu 항목을 기입하고 POST 요청 해도 menu_id가 null 이 될 수 없다고 나옴.
+    따라서 Order 테이블에서 menu 외래키 잡을 때 id가 아닌 name 으로 잡았음.
+    그에 따라 Menu 테이블에서 name 은 unique 한 컬럼이어야 함.
+    """
+    # menu = serializers.StringRelatedField()
+
+    class Meta:
+        model = Order
+        fields = ('menu', 'quantity', 'destination',
+                  'get_total_price', 'get_order_store', 'get_order_category')
+
+        # extra_kwargs = {"date_ordered": {"read_only": True}}
