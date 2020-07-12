@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions   # , filters
+from rest_framework.response import Response
+from rest_framework import viewsets, permissions, status  # , filters
 from .models import Category, Store, Order
 from .serializers import (
     CategoryListSerializer, CategoryDetailSerializer,
@@ -37,3 +38,11 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all().order_by("-date_ordered")
     serializer_class = OrderSerializer
     permission_classes = (permissions.AllowAny, )
+
+    # To create multiple model instances (POST multiple items of order)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data, many=isinstance(request.data, list))
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
