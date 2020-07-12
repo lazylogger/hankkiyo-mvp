@@ -47,9 +47,9 @@ class Store(models.Model):
 
 
 class Menu(models.Model):
-    name = models.CharField('메뉴명', max_length=40, null=False, unique=True)  # 한글표기
+    name = models.CharField('메뉴명', max_length=40, null=False)  # 한글표기
     abbr = models.CharField('menu', max_length=40, null=False, unique=True)  # 영문표기
-    imgSrc = models.FileField('메뉴사진', upload_to='menu', null=False, blank=True)
+    # imgSrc = models.FileField('메뉴사진', upload_to='menu', null=False, blank=True)
     # imgSrc = models.CharField('메뉴사진', max_length=300, default="")
     price = models.IntegerField('가격', default=0, null=False)
 
@@ -98,7 +98,7 @@ class Order(models.Model):
     # (ManyToManyField 와 같은 related 필드는 SQL 문에서 CREATE 가 아닌 것으로 추측된다.)
     menu = models.ForeignKey(
         Menu,
-        to_field="name", db_column="menu",
+        to_field="abbr", db_column="menu",
         on_delete=models.CASCADE,
         related_name='orders',
         verbose_name='메뉴')
