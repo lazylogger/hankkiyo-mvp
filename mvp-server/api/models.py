@@ -30,6 +30,7 @@ class Store(models.Model):
 
     category = models.ForeignKey(
         Category,
+        to_field="name", db_column="category",
         on_delete=models.CASCADE,
         null=False,
         related_name='stores',
@@ -62,6 +63,7 @@ class Menu(models.Model):
 
     category = models.ForeignKey(
         Category,
+        to_field="name", db_column="category",
         on_delete=models.CASCADE,
         null=False,
         related_name='menus',
@@ -69,6 +71,7 @@ class Menu(models.Model):
     )
     store = models.ForeignKey(
         Store,
+        to_field="name", db_column="store",
         on_delete=models.CASCADE,
         null=False,
         related_name='menus',
