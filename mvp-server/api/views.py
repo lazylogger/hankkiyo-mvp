@@ -26,6 +26,7 @@ class StoreViewSet(viewsets.ModelViewSet):
     serializer_class = StoreListSerializer
     detail_serializer_class = StoreDetailSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, )
+    # GET /api/stores/name 가능한 @action 추가
 
     def get_serializer_class(self):
         if self.action == 'retrieve':

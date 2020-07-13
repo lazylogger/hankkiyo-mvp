@@ -95,20 +95,21 @@ class Order(models.Model):
     # 다대다 관계의 중개모델은 직접 생성하지 않고 자동 'order_menus'
     # ManyToManyField 를 선언한 쪽에서는 해당 필드가 테이블에 생성되지 않는다.
     # (ManyToManyField 와 같은 related 필드는 SQL 문에서 CREATE 가 아닌 것으로 추측된다.)
-    menu = models.ForeignKey(
+    menu_abbr = models.ForeignKey(
         Menu,
-        to_field="abbr", db_column="menu",
+        to_field="abbr", db_column="menu_abbr",
         on_delete=models.CASCADE,
         related_name='orders',
-        verbose_name='메뉴')
+        verbose_name='메뉴(영문표기)')
     quantity = models.IntegerField('주문수량', default=1)
     destination = models.CharField('배송지', max_length=500, null=False, blank=False)
     date_ordered = models.DateTimeField('주문일자', auto_now_add=True)
 
-    # fields made by function
+    # fields made by menu_abbr
+    menu = models.CharField('메뉴', max_length=40, blank=True)
     category = models.CharField('카테고리명', max_length=40, blank=True)
     store = models.CharField('업체명', max_length=40, blank=True)
-    total_price = models.IntegerField('총가격', blank=True)
+    price = models.IntegerField('가격', blank=True)
     # total_price = models.CharField('총가격', max_length=400, blank=True)
 
     class Meta:
@@ -117,7 +118,7 @@ class Order(models.Model):
         ordering = ('-date_ordered',)  # 최신 주문순
 
     def __str__(self):
-        return f'주문번호 : {self.id} - 주문메뉴 : {self.menu.name}'
+        return f'주문번호 {self.id} ) {self.menu_abbr.name}'
 
     '''
     def get_order_category(self):
@@ -137,10 +138,11 @@ class Order(models.Model):
     '''
 
     def save(self, *args, **kwargs):
-        self.category = self.menu.category   # self.get_order_category
+        self.menu = self.menu_abbr.name
+        self.category = self.menu_abbr.category   # self.get_order_category
         # 함수는 다음과 같이 저장됨 <bound method Order.get_order_store of <Order: 주문번호 : None - 주문메뉴 : 뿌링치즈치킨 반마리>>
-        self.store = self.menu.store   # self.get_order_store
-        self.total_price = self.menu.price * self.quantity
+        self.store = self.menu_abbr.store   # self.get_order_store
+        self.price = self.menu_abbr.price * self.quantity
 
         super(Order, self).save(*args, **kwargs)
 
