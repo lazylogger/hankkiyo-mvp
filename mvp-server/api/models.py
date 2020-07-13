@@ -105,12 +105,16 @@ class Order(models.Model):
     destination = models.CharField('배송지', max_length=500, null=False, blank=False)
     date_ordered = models.DateTimeField('주문일자', auto_now_add=True)
 
-    # fields made by menu_abbr
+    ### fields made by menu_abbr ###
     menu = models.CharField('메뉴', max_length=40, blank=True)
     category = models.CharField('카테고리명', max_length=40, blank=True)
     store = models.CharField('업체명', max_length=40, blank=True)
     price = models.IntegerField('가격', blank=True)
     # total_price = models.CharField('총가격', max_length=400, blank=True)
+    ######
+    # 여러 상품 주문 시 tip 을 한번만 받도록 하는 것은 나중에 구현한다.
+    # tip = models.IntegerField('배달팁', default=900)
+    # total_price = models.IntegerField('결제금액', blank=True)
 
     class Meta:
         verbose_name = '주문'
@@ -143,6 +147,7 @@ class Order(models.Model):
         # 함수는 다음과 같이 저장됨 <bound method Order.get_order_store of <Order: 주문번호 : None - 주문메뉴 : 뿌링치즈치킨 반마리>>
         self.store = self.menu_abbr.store   # self.get_order_store
         self.price = self.menu_abbr.price * self.quantity
+        # self.total_price = self.price + self.tip
 
         super(Order, self).save(*args, **kwargs)
 
