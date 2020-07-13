@@ -65,6 +65,4 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('menu', 'quantity', 'destination',
-                  'get_total_price', 'get_order_store', 'get_order_category')
-
-        # extra_kwargs = {"date_ordered": {"read_only": True}}
+                  'category', 'store', 'total_price')

@@ -5,7 +5,6 @@ class Category(models.Model):
     name = models.CharField('카테고리', max_length=40, null=False, unique=True)  # 한글표기
     abbr = models.CharField('category', max_length=40, null=False, unique=True)  # 영문표기
     imgSrc = models.FileField('카테고리사진', upload_to='category', null=False, blank=True)
-
     # imgSrc = models.CharField('카테고리사진', max_length=300, default="")
 
     class Meta:
@@ -103,13 +102,14 @@ class Order(models.Model):
         related_name='orders',
         verbose_name='메뉴')
     quantity = models.IntegerField('주문수량', default=1)
-    destination = models.CharField('배송지', max_length=100)
+    destination = models.CharField('배송지', max_length=500, null=False, blank=False)
     date_ordered = models.DateTimeField('주문일자', auto_now_add=True)
 
     # fields made by function
-    # category = models.CharField('카테고리명', max_length=40, null=False)
-    # store = models.CharField('업체명', max_length=40, null=False)
-    # total_price = models.IntegerField('총가격')
+    category = models.CharField('카테고리명', max_length=40, blank=True)
+    store = models.CharField('업체명', max_length=40, blank=True)
+    total_price = models.IntegerField('총가격', blank=True)
+    # total_price = models.CharField('총가격', max_length=400, blank=True)
 
     class Meta:
         verbose_name = '주문'
@@ -119,6 +119,7 @@ class Order(models.Model):
     def __str__(self):
         return f'주문번호 : {self.id} - 주문메뉴 : {self.menu.name}'
 
+    '''
     def get_order_category(self):
         return self.menu.category.name
 
@@ -133,13 +134,14 @@ class Order(models.Model):
         # for order_menu in self.menu:
         total = self.menu.price * self.quantity
         return total
-
     '''
+
     def save(self, *args, **kwargs):
-        self.category = self.menu.category
-        self.store = self.menu.store
-        self.total_price = self.get_total_price
+        self.category = self.menu.category   # self.get_order_category
+        # 함수는 다음과 같이 저장됨 <bound method Order.get_order_store of <Order: 주문번호 : None - 주문메뉴 : 뿌링치즈치킨 반마리>>
+        self.store = self.menu.store   # self.get_order_store
+        self.total_price = self.menu.price * self.quantity
 
         super(Order, self).save(*args, **kwargs)
-    '''
+
 
