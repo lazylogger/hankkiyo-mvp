@@ -32,6 +32,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'ec2-3-34-210-157.ap-northeast-2.compute.amazonaws.com',
     '127.0.0.1',
+    '*',
 ]
 
 
@@ -49,6 +50,9 @@ INSTALLED_APPS = [
 
     # third party
     'rest_framework',
+    'storages',
+    'pipeline',
+    'corsheaders',
 
     # my app
     'api',
@@ -57,7 +61,7 @@ INSTALLED_APPS = [
 # rest framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     )
 }
 
@@ -69,7 +73,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://3.34.210.157:8000',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -128,10 +143,76 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True   # 장고 내부적으로 인식하는 시간대
+USE_TZ = False   # local time 사용
+
+
+# PIPELINE
+PIPELINE = {
+    'PIPELINE_ENABLED': True,
+    'JAVASCRIPT': {
+        'stats': {
+            'source_filenames': (
+              'js/jquery.js',
+              'js/d3.js',
+              'js/collections/*.js',
+              'js/application.js',
+            ),
+            'output_filename': 'js/stats.js',
+        }
+    }
+}
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+"""
+if DEBUG:
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'   # Local, 즉 DEBUG=True 일 경우 pipeline 사용
 
+    MEDIA_URL = '/media/'   # config/media/모델명/사진.jpg
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+else:
+    # AWS S3 AWS Setting
+    AWS_ACCESS_KEY_ID = secrets['AWS_S3']['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = secrets['AWS_S3']['AWS_SECRET_ACCESS_KEY']
+    AWS_REGION = secrets['AWS_S3']['AWS_REGION']
+
+    AWS_STORAGE_BUCKET_NAME = secrets['AWS_S3']['AWS_STORAGE_BUCKET_NAME']
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_DEFAULT_ACL = None
+
+    # Static Setting
+    STATIC_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # Media Setting
+    MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
+"""
+
+# AWS S3 AWS Setting
+AWS_ACCESS_KEY_ID = secrets['AWS_S3']['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = secrets['AWS_S3']['AWS_SECRET_ACCESS_KEY']
+AWS_REGION = secrets['AWS_S3']['AWS_REGION']
+
+AWS_STORAGE_BUCKET_NAME = secrets['AWS_S3']['AWS_STORAGE_BUCKET_NAME']
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = None
+
+# Static Setting
 STATIC_URL = '/static/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media Setting
+# MEDIA_URL = "https://%s/" % AWS_S3_CUSTOM_DOMAIN
+MEDIA_ROOT = os.path.join(BASE_DIR, 'path/to/store/my/files/')
