@@ -5,7 +5,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-secrets['DB_SETTINGS']
+DATABASES = secrets['DB_SETTINGS']
 """
 DATABASES = {
     'default': {
