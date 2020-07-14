@@ -21,6 +21,7 @@ class Store(models.Model):
     abbr = models.CharField('store', max_length=40, null=False, unique=True)  # 영문표기
     imgSrc = models.FileField('업체사진', upload_to='store', null=False, blank=True)
     # imgSrc = models.CharField('업체사진', max_length=300, default="")
+    bestMenus = models.CharField('베스트메뉴', max_length=40, null=False)
 
     '''추후 적용'''
     # description = models.TextField('업체설명', max_length=300, null=False)
