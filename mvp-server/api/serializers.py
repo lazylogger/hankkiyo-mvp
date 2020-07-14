@@ -22,13 +22,15 @@ class MenuSerializer(serializers.ModelSerializer):
 
 class StoreListSerializer(serializers.ModelSerializer):
     menus = MenuSerializer(many=True)
-    bestMenus = serializers.SerializerMethodField('get_bestMenus')
+    # bestMenus = serializers.SerializerMethodField('get_bestMenus')
     category = serializers.StringRelatedField()
 
     class Meta:
         model = Store
         fields = ['name', 'abbr', 'imgSrc', 'bestMenus', 'menus', 'category']
 
+    """
+    # 모든 가게에 "bestMenus" : "콤비네이션 피자 세트 페퍼로니피자 세트"가 찍힌다.
     def get_bestMenus(self, store):
         bestmenus = Menu.objects.all()[:2]   # get 2 best menus for this store
         serializer = MenuSerializer(instance=bestmenus, many=True)
@@ -41,6 +43,7 @@ class StoreListSerializer(serializers.ModelSerializer):
 
         # return serializer.data
         return namestr
+    """
 
 
 class StoreDetailSerializer(serializers.ModelSerializer):
