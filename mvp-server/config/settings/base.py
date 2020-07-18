@@ -66,14 +66,34 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    'http://3.34.210.157:8000',
+CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
+    'http://localhost:80',
+    'http://127.0.0.1:80',
+    'https://127.0.0.1:80',
+    'https://localhost:80',
+]
+CORS_ORIGIN_WHITELIST = [
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
+    'http://localhost:80',
+    'http://127.0.0.1:80',
+    'https://127.0.0.1:80',
+    'https://localhost:80',
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = (
+    'GET',
+    'OPTIONS',
+    'POST',
+)
 
 # HTTPS 보안
 SESSION_COOKIE_SECURE = True
@@ -205,7 +225,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_DEFAULT_ACL = None
 
 # Static Setting
-STATIC_URL = '/static/'
+STATIC_URL = ' /static/'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Media Setting
